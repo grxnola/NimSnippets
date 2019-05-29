@@ -1,0 +1,20 @@
+import math
+
+type
+  Queue*[N: static int] = object of RootObj
+    head, tail, depth: int
+    body: array[N, int]
+
+proc enqueue*(q: var Queue, n: int) =
+  q.body[q.tail] = n
+  q.tail = floorMod((q.tail + 1), len(q.body))
+  q.depth += 1
+  if q.depth > len(q.body): 
+    raise newException(Exception, "Queue overflow!")
+
+proc dequeue*(q: var Queue): int =
+  result = q.body[q.head]
+  q.head = floorMod((q.head + 1), len(q.body))
+  q.depth -= 1
+  if q.depth < 0:
+    raise newException(Exception, "Queue underflow!")
